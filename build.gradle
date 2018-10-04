@@ -1,0 +1,19 @@
+plugins {
+	id 'java'
+    id 'war'
+}
+
+group 'movebytes'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.wildfly.swarm/jpa
+    compile group: 'org.wildfly.swarm', name: 'jpa', version: '2018.5.0'
+
+    // https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-jaxrs
+    compile group: 'org.jboss.resteasy', name: 'resteasy-jaxrs', version: '3.6.1.Final'
+}
