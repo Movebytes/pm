@@ -4,15 +4,15 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
-    <changeSet author="Movebytes" id="changelog-1.0">
-        <createTable tableName="Users">
-            <column name="id" type="int">
+    <changeSet author="Movebytes" id="changelog-1.0" context="development">
+        <createTable tableName="users">
+            <column name="id" type="INT">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(50)">
+            <column name="name" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="surname" type="varchar(50)">
+            <column name="surname" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
