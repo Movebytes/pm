@@ -1,26 +1,68 @@
+//this part imports the cargo plugin for gradle
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-cargo-plugin:2.2.3'
+    }
+}
+
 plugins {
-	id 'java'
+    id 'java'
     id 'war'
     id 'idea'
 }
 
-group 'movebytes'
+apply plugin: 'com.bmuschko.cargo'
+
+println GradleVersion.current()
+
+//this part configures the cargo plugin to
+//work with our previously installed WildFly Server
+cargo {
+    containerId = 'wildfly10x'
+    port = 8080
+
+    deployable{
+        file = file('build/libs/pm.prototype-1.0-SNAPSHOT.war')
+        context = 'pm'
+    }
+
+    local{
+        homeDir = file('C:/Servers/wildfly-10.1.0.Final')
+    }
+}
+
+group 'prototype'
 version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/org.hibernate.javax.persistence/hibernate-jpa-2.1-api
-    compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: '1.0.2.Final'
+    // https://mvnrepository.com/artifact/javax.ejb/ejb-api
+    compileOnly group: 'javax.ejb', name: 'ejb-api', version: '3.0'
+    // https://mvnrepository.com/artifact/javax.enterprise/cdi-api
+    compileOnly group: 'javax.enterprise', name: 'cdi-api', version: '2.0'
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.6'
+    testCompile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.6'
+    // https://mvnrepository.com/artifact/org.jboss.spec.javax.annotation/jboss-annotations-api_1.2_spec
+    compile group: 'org.jboss.spec.javax.annotation', name: 'jboss-annotations-api_1.2_spec', version: '1.0.2.Final'
+    testCompile group: 'org.jboss.spec.javax.annotation', name: 'jboss-annotations-api_1.2_spec', version: '1.0.2.Final'
+    // https://mvnrepository.com/artifact/org.jboss.spec.javax.ws.rs/jboss-jaxrs-api_2.0_spec
+    compile group: 'org.jboss.spec.javax.ws.rs', name: 'jboss-jaxrs-api_2.0_spec', version: '1.0.1.Final'
+    testCompile group: 'org.jboss.spec.javax.ws.rs', name: 'jboss-jaxrs-api_2.0_spec', version: '1.0.1.Final'
 
-    // https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-jaxrs
-    compile group: 'org.jboss.resteasy', name: 'resteasy-jaxrs', version: '3.6.1.Final'
-
-    // https://mvnrepository.com/artifact/org.jboss.spec.javax.ejb/jboss-ejb-api_3.1_spec
-    compile group: 'org.jboss.spec.javax.ejb', name: 'jboss-ejb-api_3.1_spec', version: '1.0.2.Final'
-
-    // https://mvnrepository.com/artifact/org.liquibase/liquibase-core
-    compile group: 'org.liquibase', name: 'liquibase-core', version: '3.6.2'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    //this part changes an internal cargo dependency, due to some error
+    def cargoVersion = '1.5.0'
+    cargo "org.codehaus.cargo:cargo-core-uberjar:$cargoVersion",
+            "org.codehaus.cargo:cargo-ant:$cargoVersion"
 }
+
+cargoRedeployLocal.dependsOn build
