@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
     <changeSet author="Movebytes" id="changelog-1.0" context="development">
-        <createTable tableName="users">
+        <createTable tableName="pm_users">
             <column name="id" type="INT">
                 <constraints primaryKey="true" nullable="false"/>
             </column>

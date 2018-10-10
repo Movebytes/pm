@@ -30,7 +30,7 @@ cargo {
     }
 
     local{
-        homeDir = file('C:/Servers/wildfly-10.1.0.Final')
+        homeDir = file('C:/Servers/wildfly-12.0.0.Final')
     }
 }
 
@@ -44,17 +44,21 @@ repositories {
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/javax.ejb/ejb-api
-    compileOnly group: 'javax.ejb', name: 'ejb-api', version: '3.0'
-    // https://mvnrepository.com/artifact/javax.enterprise/cdi-api
     compileOnly group: 'javax.enterprise', name: 'cdi-api', version: '2.0'
-    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
+    compileOnly group: 'org.jboss.spec.javax.ejb', name: 'jboss-ejb-api_3.2_spec', version: '1.0.1.Final'
+
+    compile group: 'org.liquibase', name: 'liquibase-core', version: '3.6.2'
+    testCompile group: 'org.liquibase', name: 'liquibase-core', version: '3.6.2'
+
+    compile group: 'com.mattbertolini', name: 'liquibase-slf4j', version: '2.0.0'
+    testCompile group: 'com.mattbertolini', name: 'liquibase-slf4j', version: '2.0.0'
+
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.6'
     testCompile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.6'
-    // https://mvnrepository.com/artifact/org.jboss.spec.javax.annotation/jboss-annotations-api_1.2_spec
+
     compile group: 'org.jboss.spec.javax.annotation', name: 'jboss-annotations-api_1.2_spec', version: '1.0.2.Final'
     testCompile group: 'org.jboss.spec.javax.annotation', name: 'jboss-annotations-api_1.2_spec', version: '1.0.2.Final'
-    // https://mvnrepository.com/artifact/org.jboss.spec.javax.ws.rs/jboss-jaxrs-api_2.0_spec
+
     compile group: 'org.jboss.spec.javax.ws.rs', name: 'jboss-jaxrs-api_2.0_spec', version: '1.0.1.Final'
     testCompile group: 'org.jboss.spec.javax.ws.rs', name: 'jboss-jaxrs-api_2.0_spec', version: '1.0.1.Final'
 
