@@ -1,38 +1,10 @@
-//this part imports the cargo plugin for gradle
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.bmuschko:gradle-cargo-plugin:2.2.3'
-    }
-}
-
 plugins {
     id 'java'
     id 'war'
     id 'idea'
 }
 
-apply plugin: 'com.bmuschko.cargo'
-
 println GradleVersion.current()
-
-//this part configures the cargo plugin to
-//work with our previously installed WildFly Server
-cargo {
-    containerId = 'wildfly10x'
-    port = 8080
-
-    deployable{
-        file = file('build/libs/pm.prototype-1.0-SNAPSHOT.war')
-        context = 'pm'
-    }
-
-    local{
-        homeDir = file('C:/Servers/wildfly-12.0.0.Final')
-    }
-}
 
 group 'prototype'
 version '1.0-SNAPSHOT'
@@ -46,6 +18,15 @@ repositories {
 dependencies {
     compileOnly group: 'javax.enterprise', name: 'cdi-api', version: '2.0'
     compileOnly group: 'org.jboss.spec.javax.ejb', name: 'jboss-ejb-api_3.2_spec', version: '1.0.1.Final'
+
+    compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: '1.0.2.Final'
+    testCompile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: '1.0.2.Final'
+
+    compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    testCompile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+
+    compile group: 'org.json', name: 'json', version: '20180813'
+    testCompile group: 'org.json', name: 'json', version: '20180813'
 
     compile group: 'org.liquibase', name: 'liquibase-core', version: '3.6.2'
     testCompile group: 'org.liquibase', name: 'liquibase-core', version: '3.6.2'
@@ -63,10 +44,4 @@ dependencies {
     testCompile group: 'org.jboss.spec.javax.ws.rs', name: 'jboss-jaxrs-api_2.0_spec', version: '1.0.1.Final'
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    //this part changes an internal cargo dependency, due to some error
-    def cargoVersion = '1.5.0'
-    cargo "org.codehaus.cargo:cargo-core-uberjar:$cargoVersion",
-            "org.codehaus.cargo:cargo-ant:$cargoVersion"
 }
-
-cargoRedeployLocal.dependsOn build

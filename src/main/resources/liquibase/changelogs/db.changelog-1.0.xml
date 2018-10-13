@@ -4,54 +4,6 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
-    <changeSet author="R.B" id="changelog-0.0.1" context="development">
-        <createTable tableName="pm_user_status">
-            <column name="id" type="INT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false" />
-            </column>
-            <column name="name" type="VARCHAR(100)">
-                <constraints nullable="false" />
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="R.B" id="changelog-0.0.2" context="development">
-        <insert tableName="pm_user_status">
-            <column name="name" value="inactive" />
-        </insert>
-        <insert tableName="pm_user_status">
-            <column name="name" value="active" />
-        </insert>
-        <insert tableName="pm_user_status">
-            <column name="name" value="deleted" />
-        </insert>
-    </changeSet>
-    <changeSet author="R.B" id="changelog-0.0.3" context="development">
-        <createTable tableName="pm_role">
-            <column name="id" type="INT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false" />
-            </column>
-            <column name="name" type="VARCHAR(100)">
-                <constraints nullable="false" />
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="R.B" id="changelog-0.0.4" context="development">
-        <insert tableName="pm_role">
-            <column name="name" value="admin" />
-        </insert>
-        <insert tableName="pm_role">
-            <column name="name" value="manager" />
-        </insert>
-        <insert tableName="pm_role">
-            <column name="name" value="developer" />
-        </insert>
-        <insert tableName="pm_role">
-            <column name="name" value="qa" />
-        </insert>
-        <insert tableName="pm_role">
-            <column name="name" value="designer" />
-        </insert>
-    </changeSet>
     <changeSet author="R.B" id="changelog-0.0.5" context="development">
         <createTable tableName="pm_user">
             <column name="id" type="BIGINT" autoIncrement="true">
@@ -64,29 +16,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="status" type="INT">
-                <constraints nullable="false" foreignKeyName="fk_user_status" references="pm_user_status(id)" />
-            </column>
-            <column name="role" type="INT">
-                <constraints foreignKeyName="fk_user_role" references="pm_role(id)" />
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="R.B" id="changelog-0.0.6" context="development">
-        <createTable tableName="pm_project_status">
-            <column name="id" type="INT" autoIncrement="true">
-                <constraints nullable="false" primaryKey="true" />
-            </column>
-            <column name="name" type="VARCHAR(100)">
                 <constraints nullable="false" />
             </column>
         </createTable>
-    </changeSet>
-    <changeSet author="R.B" id="changelog-0.0.7" context="development">
-        <insert tableName="pm_project_status">
-            <column name="name" value="created" />
-            <column name="name" value="active" />
-            <column name="name" value="finished" />
-        </insert>
     </changeSet>
     <changeSet author="R.B" id="changelog-0.0.8" context="development">
         <createTable tableName="pm_project">
@@ -99,7 +31,7 @@
             <column name="start_date" type="TIMESTAMP" />
             <column name="end_date" type="TIMESTAMP" />
             <column name="status" type="INT">
-                <constraints nullable="false" foreignKeyName="fk_project_status" references="pm_project_status(id)" />
+                <constraints nullable="false" />
             </column>
         </createTable>
     </changeSet>
