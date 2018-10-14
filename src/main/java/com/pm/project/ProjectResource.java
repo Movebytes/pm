@@ -3,9 +3,15 @@ package com.pm.project;
 import com.pm.project.entity.ProjectEntity;
 import com.pm.project.mapper.ProjectMapper;
 import com.pm.project.model.ProjectModel;
+import com.pm.project.model.ProjectStatus;
 import com.pm.shared.exception.ExceptionMapper;
 import com.pm.shared.exception.BadModelRequestException;
 import com.pm.shared.exception.EntityNotFoundException;
+import com.pm.user.UserService;
+import com.pm.user.entity.UserEntity;
+import com.pm.user.mapper.UserMapper;
+import com.pm.user.model.UserModel;
+import com.pm.user.model.UserStatus;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -33,8 +39,14 @@ public class ProjectResource {
     @EJB
     private ProjectService projectService;
 
+    @EJB
+    private UserService userService;
+
     @Inject
-    private ProjectMapper mapper;
+    private ProjectMapper projectMapper;
+
+    @Inject
+    private UserMapper userMapper;
 
     @Inject
     private ExceptionMapper exceptionMapper;
@@ -42,6 +54,11 @@ public class ProjectResource {
     @Inject
     private Validator validator;
 
+    /**
+     * Find a project by id
+     * @param projectId
+     * @return
+     */
     @GET
     @Path("{id}")
     public Response doProject(@PathParam("id") Integer projectId) {
@@ -50,32 +67,58 @@ public class ProjectResource {
             return exceptionMapper.mapToResponse(new EntityNotFoundException());
         }
         return Response
-                .ok(mapper.mapToModel(entity))
+                .ok(projectMapper.deepMapToModel(entity))
                 .build();
     }
 
+    /**
+     * Find all projects
+     * @return
+     */
     @GET
     public Response doAll() {
         final List<ProjectEntity> entities = projectService.getAll();
         final List<ProjectModel> models = new ArrayList<ProjectModel>();
         for (final ProjectEntity entity : entities) {
-            models.add(mapper.mapToModel(entity));
+            models.add(projectMapper.deepMapToModel(entity));
         }
         return Response
                 .ok(models)
                 .build();
     }
 
+    /**
+     * Find all active projects
+     * @return
+     */
+    @GET
+    @Path("/active")
+    public Response doFindActive() {
+        final List<ProjectEntity> entities = projectService.getActiveProjects();
+        final List<ProjectModel> models = new ArrayList<>();
+        for (final ProjectEntity entity : entities) {
+            models.add(projectMapper.deepMapToModel(entity));
+        }
+        return Response
+                .ok(models)
+                .build();
+    }
+
+    /**
+     * Create a new project
+     * @param model
+     * @return
+     */
     @POST
     public Response doCreate(ProjectModel model) {
         if (model == null) {
             return exceptionMapper.mapToResponse(new BadModelRequestException());
         }
-        Set<ConstraintViolation<ProjectModel>> violations = validator.validate(model);
+        final Set<ConstraintViolation<ProjectModel>> violations = validator.validate(model);
         if (violations.size() != 0) {
             return exceptionMapper.mapToResponse(new IllegalArgumentException(violations.toString()));
         }
-        final ProjectEntity entity = mapper.mapToEntity(model);
+        final ProjectEntity entity = projectMapper.mapToEntity(model);
         projectService.create(entity);
         URI projectUri = uriInfo
                 .getAbsolutePathBuilder()
@@ -86,12 +129,17 @@ public class ProjectResource {
                 .build();
     }
 
+    /**
+     * Update existing project
+     * @param model
+     * @return
+     */
     @PUT
     public Response doUpdate(ProjectModel model) {
         if (model == null) {
             return exceptionMapper.mapToResponse(new BadModelRequestException());
         }
-        Set<ConstraintViolation<ProjectModel>> violations = validator.validate(model);
+        final Set<ConstraintViolation<ProjectModel>> violations = validator.validate(model);
         if (violations.size() != 0) {
             return exceptionMapper.mapToResponse(new IllegalArgumentException(violations.toString()));
         }
@@ -99,12 +147,45 @@ public class ProjectResource {
         if (entity == null) {
             return exceptionMapper.mapToResponse(new EntityNotFoundException());
         }
-        projectService.update(mapper.mapToEntity(model));
+        projectService.update(projectMapper.mapToEntity(model));
         return Response
                 .ok(model)
                 .build();
     }
 
+    @PUT
+    @Path("{id}/assign/{userId}")
+    public Response doAssign(@PathParam("id") Integer id, @PathParam("userId") Integer userId) {
+        final ProjectEntity projectEntity = projectService.getEntityById(id);
+        if (projectEntity == null) {
+            return exceptionMapper.mapToResponse(new EntityNotFoundException());
+        }
+        if (projectEntity.getStatus() != ProjectStatus.ACTIVE) {
+            return exceptionMapper.mapToResponse(new IllegalArgumentException("Project must be active"));
+        }
+        final UserEntity userEntity = userService.getEntityById(userId);
+        if (userEntity == null) {
+            return exceptionMapper.mapToResponse(new EntityNotFoundException());
+        }
+        final UserModel userModel = userMapper.deepMapToModel(userEntity);
+        if (userModel.getStatus() != UserStatus.ACTIVE) {
+            return exceptionMapper.mapToResponse(new IllegalArgumentException("User must be active"));
+        }
+        if (userModel.getProjects().size() != 0) {
+            return exceptionMapper.mapToResponse(new WebApplicationException("User already assigned to active project"));
+        }
+        projectEntity.getUsers().add(userEntity);
+        userEntity.getProjects().add(projectEntity);
+        return Response
+                .ok(projectMapper.deepMapToModel(projectService.update(projectEntity)))
+                .build();
+    }
+
+    /**
+     * Delete existing project by id
+     * @param projectId
+     * @return
+     */
     @DELETE
     @Path("{id}")
     public Response doDelete(@PathParam("id") Integer projectId) {

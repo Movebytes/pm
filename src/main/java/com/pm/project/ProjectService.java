@@ -1,6 +1,7 @@
 package com.pm.project;
 
 import com.pm.project.entity.ProjectEntity;
+import com.pm.project.model.ProjectStatus;
 import com.pm.shared.AbstractService;
 
 import javax.ejb.Stateless;
@@ -15,6 +16,12 @@ public class ProjectService extends AbstractService<ProjectEntity, Integer> {
 
     public List<ProjectEntity> getAll() {
         return em.createQuery(ProjectQuery.ALL)
+                .getResultList();
+    }
+
+    public List<ProjectEntity> getActiveProjects() {
+        return em.createQuery(ProjectQuery.ALL_ACTIVE)
+                .setParameter(1, ProjectStatus.ACTIVE)
                 .getResultList();
     }
 

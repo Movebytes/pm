@@ -1,15 +1,14 @@
 package com.pm.user.model;
 
+import com.pm.project.model.ProjectModel;
+import com.pm.shared.validator.ActiveProject;
+
 import javax.validation.constraints.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserModel {
     private final String PATTERN = "^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$";
-
-    public enum Status {
-        INACTIVE,
-        ACTIVE,
-        DELETED
-    }
 
     private Integer id;
 
@@ -24,7 +23,11 @@ public class UserModel {
     private String surname;
 
     @NotNull
-    private Status status;
+    private Integer status;
+
+    @Size(min = 0, max = 1)
+    @ActiveProject
+    private List<ProjectModel> projects = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -50,11 +53,19 @@ public class UserModel {
         this.surname = surname;
     }
 
-    public Status getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public List<ProjectModel> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<ProjectModel> projects) {
+        this.projects = projects;
     }
 }

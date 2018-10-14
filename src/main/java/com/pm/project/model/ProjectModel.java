@@ -1,15 +1,14 @@
 package com.pm.project.model;
 
+import com.pm.shared.validator.ActiveUser;
+import com.pm.user.model.UserModel;
+
 import javax.validation.constraints.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ProjectModel {
-    public enum Status {
-        CREATED,
-        ACTIVE,
-        FINISHED
-    }
-
     private Integer id;
 
     @NotNull
@@ -17,14 +16,15 @@ public class ProjectModel {
     @Size(min = 2, max = 255)
     private String name;
 
-    @FutureOrPresent
     private Date startDate;
 
-    @Future
     private Date endDate;
 
     @NotNull
-    private Status status;
+    private Integer status;
+
+    @ActiveUser
+    private List<UserModel> users = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -58,11 +58,19 @@ public class ProjectModel {
         this.endDate = endDate;
     }
 
-    public Status getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public List<UserModel> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<UserModel> users) {
+        this.users = users;
     }
 }

@@ -1,9 +1,11 @@
 package com.pm.project.entity;
 
-import com.pm.project.model.ProjectModel;
+import com.pm.user.entity.UserEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "pm_project")
@@ -25,7 +27,10 @@ public class ProjectEntity {
     private Date endDate;
 
     @Column(nullable = false)
-    private ProjectModel.Status status;
+    private Integer status;
+
+    @ManyToMany(mappedBy = "projects", fetch = FetchType.LAZY)
+    private List<UserEntity> users = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -59,11 +64,19 @@ public class ProjectEntity {
         this.endDate = endDate;
     }
 
-    public ProjectModel.Status getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(ProjectModel.Status status) {
+    public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public List<UserEntity> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<UserEntity> users) {
+        this.users = users;
     }
 }

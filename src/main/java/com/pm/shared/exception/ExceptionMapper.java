@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import javax.enterprise.context.Dependent;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -29,6 +30,14 @@ public class ExceptionMapper {
     public Response mapToResponse(BadRequestException exception) {
         return Response
                 .status(406)
+                .entity(new JSONObject().put("message", exception.getMessage()).toString())
+                .type(MediaType.APPLICATION_JSON)
+                .build();
+    }
+
+    public Response mapToResponse(WebApplicationException exception) {
+        return Response
+                .status(500)
                 .entity(new JSONObject().put("message", exception.getMessage()).toString())
                 .type(MediaType.APPLICATION_JSON)
                 .build();

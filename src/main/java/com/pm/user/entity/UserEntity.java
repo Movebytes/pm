@@ -1,8 +1,12 @@
 package com.pm.user.entity;
 
-import com.pm.user.model.UserModel;
+import com.pm.project.entity.ProjectEntity;
+import com.pm.project.model.ProjectStatus;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "pm_user")
@@ -19,7 +23,14 @@ public class UserEntity {
     private String surname;
 
     @Column(nullable = false)
-    private UserModel.Status status;
+    private Integer status;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "pm_workload",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id"))
+    @Where(clause = "status = " + ProjectStatus.ACTIVE)
+    private List<ProjectEntity> projects = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -45,11 +56,19 @@ public class UserEntity {
         this.surname = surname;
     }
 
-    public UserModel.Status getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(UserModel.Status status) {
+    public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public List<ProjectEntity> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<ProjectEntity> projects) {
+        this.projects = projects;
     }
 }

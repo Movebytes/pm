@@ -42,6 +42,11 @@ public class UserResource {
     @Inject
     private Validator validator;
 
+    /**
+     * Find a user by id
+     * @param userId
+     * @return
+     */
     @GET
     @Path("{id}")
     public Response doFind(@PathParam("id") Integer userId) {
@@ -50,28 +55,54 @@ public class UserResource {
             return exceptionMapper.mapToResponse(new EntityNotFoundException());
         }
         return Response
-                .ok(mapper.mapToModel(entity))
+                .ok(mapper.deepMapToModel(entity))
                 .build();
     }
 
+    /**
+     * Find all users
+     * @return
+     */
     @GET
     public Response doFindAll() {
         final List<UserEntity> entities = userService.getAll();
-        final List<UserModel> models = new ArrayList<UserModel>();
+        final List<UserModel> models = new ArrayList<>();
         for (final UserEntity entity : entities) {
-            models.add(mapper.mapToModel(entity));
+            models.add(mapper.deepMapToModel(entity));
         }
         return Response
                 .ok(models)
                 .build();
     }
 
+    /**
+     * Find all active users
+     * @return
+     */
+    @GET
+    @Path("/active")
+    public Response doFindActive() {
+        final List<UserEntity> entities = userService.getActiveUsers();
+        final List<UserModel> models = new ArrayList<>();
+        for (final UserEntity entity : entities) {
+            models.add(mapper.deepMapToModel(entity));
+        }
+        return Response
+                .ok(models)
+                .build();
+    }
+
+    /**
+     * Create a new user
+     * @param model
+     * @return
+     */
     @POST
     public Response doCreate(UserModel model) {
         if (model == null) {
             return exceptionMapper.mapToResponse(new BadModelRequestException());
         }
-        Set<ConstraintViolation<UserModel>> violations = validator.validate(model);
+        final Set<ConstraintViolation<UserModel>> violations = validator.validate(model);
         if (violations.size() != 0) {
             return exceptionMapper.mapToResponse(new IllegalArgumentException(violations.toString()));
         }
@@ -86,12 +117,17 @@ public class UserResource {
                 .build();
     }
 
+    /**
+     * Update existing user
+     * @param model
+     * @return
+     */
     @PUT
     public Response doUpdate(UserModel model) {
         if (model == null) {
             return exceptionMapper.mapToResponse(new BadModelRequestException());
         }
-        Set<ConstraintViolation<UserModel>> violations = validator.validate(model);
+        final Set<ConstraintViolation<UserModel>> violations = validator.validate(model);
         if (violations.size() != 0) {
             return exceptionMapper.mapToResponse(new IllegalArgumentException(violations.toString()));
         }
@@ -105,6 +141,11 @@ public class UserResource {
                 .build();
     }
 
+    /**
+     * Delete existing user by id
+     * @param userId
+     * @return
+     */
     @DELETE
     @Path("{id}")
     public Response doDelete(@PathParam("id") Integer userId) {
