@@ -1,7 +1,7 @@
 package com.pm.user.model;
 
 import com.pm.project.model.ProjectModel;
-import com.pm.shared.validator.ActiveProject;
+import com.pm.shared.validator.ActiveProjectList;
 
 import javax.validation.constraints.*;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class UserModel {
     private Integer status;
 
     @Size(min = 0, max = 1)
-    @ActiveProject
+    @ActiveProjectList
     private List<ProjectModel> projects = new ArrayList<>();
 
     public Integer getId() {

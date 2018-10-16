@@ -1,6 +1,5 @@
 package com.pm.shared.validator;
 
-import com.google.auto.service.AutoService;
 import com.pm.user.model.UserModel;
 import com.pm.user.model.UserStatus;
 
@@ -8,10 +7,9 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-@AutoService(ConstraintValidator.class)
-public class ActiveUserValidator implements ConstraintValidator<ActiveUser, List<UserModel>> {
+public class ActiveUserValidator implements ConstraintValidator<ActiveUserList, List<UserModel>> {
 
-    public void initialize(ActiveUser activeProject) {
+    public void initialize(ActiveUserList activeProject) {
     }
 
     public boolean isValid(List<UserModel> users, ConstraintValidatorContext context) {

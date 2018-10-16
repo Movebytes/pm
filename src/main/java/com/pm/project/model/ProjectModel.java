@@ -1,6 +1,6 @@
 package com.pm.project.model;
 
-import com.pm.shared.validator.ActiveUser;
+import com.pm.shared.validator.ActiveUserList;
 import com.pm.user.model.UserModel;
 
 import javax.validation.constraints.*;
@@ -23,7 +23,7 @@ public class ProjectModel {
     @NotNull
     private Integer status;
 
-    @ActiveUser
+    @ActiveUserList
     private List<UserModel> users = new ArrayList<>();
 
     public Integer getId() {

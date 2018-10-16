@@ -7,9 +7,9 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-public class ActiveProjectValidator implements ConstraintValidator<ActiveProject, List<ProjectModel>> {
+public class ActiveProjectValidator implements ConstraintValidator<ActiveProjectList, List<ProjectModel>> {
 
-    public void initialize(ActiveProject activeProject) {
+    public void initialize(ActiveProjectList activeProject) {
     }
 
     public boolean isValid(List<ProjectModel> projects, ConstraintValidatorContext context) {
