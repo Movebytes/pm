@@ -17,8 +17,13 @@ repositories {
 
 dependencies {
     compileOnly group: 'javax.enterprise', name: 'cdi-api', version: '2.0'
+    testCompile group: 'javax.enterprise', name: 'cdi-api', version: '2.0'
+
     compileOnly group: 'org.jboss.spec.javax.ejb', name: 'jboss-ejb-api_3.2_spec', version: '1.0.1.Final'
+    testCompile group: 'org.jboss.spec.javax.ejb', name: 'jboss-ejb-api_3.2_spec', version: '1.0.1.Final'
+
     compileOnly group: 'org.hibernate', name: 'hibernate-core', version: '5.3.6.Final'
+    testCompile group: 'org.hibernate', name: 'hibernate-core', version: '5.3.6.Final'
 
     compile group: 'com.google.auto.service', name: 'auto-service', version: '1.0-rc4'
     testCompile group: 'com.google.auto.service', name: 'auto-service', version: '1.0-rc4'
@@ -44,4 +49,6 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.13.Final'
     testCompile group: 'org.glassfish', name: 'javax.el', version: '3.0.0'
+    testCompile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+    testCompile group: 'com.h2database', name: 'h2', version: '1.4.197'
 }
