@@ -31,5 +31,5 @@ Java EE Application
 ## TODO Features
 - Create reports
 - Package into Docker container
-- Tests (Unit, Integration, Migration)
+- Tests (Unit)
 - UI
